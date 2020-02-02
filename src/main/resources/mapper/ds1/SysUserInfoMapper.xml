@@ -1,0 +1,156 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.siroinfo.ecms.dao.ds1.SysUserInfoDao">
+    <select id="getUserByNo" resultType="com.siroinfo.ecms.model.SysUserInfoModel">		
+		SELECT t1.user_no as userNo,t1.name as userName,t1.org_id as orgId,t2.password,t1.stat,t2.status AS pwdStatus,t2.errnum
+		FROM sys_user_info t1,sys_user_pwd t2
+		WHERE t1.user_no = t2.userNo AND t1.user_no = #{userNo}
+	</select>
+	
+	<update id="updateUserStatus" parameterType="java.util.HashMap">
+		update
+		sys_user_info
+		set
+		<if test="params.userStatus!=null and params.userStatus != ''">
+			stat=#{params.userStatus},
+		</if>
+		user_no=#{params.userNo}
+		where
+		user_no=#{params.userNo}
+	</update>
+	
+	<update id="updateUserPwd" parameterType="java.util.HashMap">
+		update
+		sys_user_pwd
+		set
+		<if test="updateUserMap.password!=null and updateUserMap.password != ''">
+			password=#{updateUserMap.password},
+		</if>
+		<if test="updateUserMap.status!=null and updateUserMap.status != ''">
+			status=#{updateUserMap.status},
+		</if>
+		<if test="updateUserMap.errnum!=null and updateUserMap.errnum != ''">
+			errnum=#{updateUserMap.errnum},
+		</if>
+		<if test="updateUserMap.upddate!=null and updateUserMap.upddate != ''">
+			upddate=#{updateUserMap.upddate},
+		</if>
+		<if test="updateUserMap.enddate!=null and updateUserMap.enddate != ''">
+			enddate=#{updateUserMap.enddate},
+		</if>
+		userno=#{updateUserMap.userNo}
+		where
+		userno=#{updateUserMap.userNo}
+	</update>
+	
+	<select id="getUserByNoAndPwd" resultType="java.util.Map">
+		SELECT t1.user_No,t1.name,t1.stat,t2.password,t2.salt,t2.status
+		FROM sys_user_info t1,sys_user_pwd t2
+		WHERE t1.user_No = t2.userNo and t1.user_No = #{userNo} and t2.password = #{password}
+	</select>
+	
+	<select id="getPwdNum" resultType="java.util.Map">
+		select t2.userNo,t2.errnum, t2.status
+		from sys_user_pwd t2
+		where t2.userNo = #{userNo}
+	</select>
+	
+	<select id="getUserMenuByUserNo" resultType="com.siroinfo.ecms.model.SysMenuInfoModel">
+		SELECT id,name,url,t1.type,icon,ordernum,pid,enable,remark,t1.targettype 
+		FROM sys_menu_info t
+		LEFT JOIN sys_power_info t1 ON t.ID=t1.MENUID AND t1.type='1'
+		LEFT JOIN sys_user_role_info t2 ON t2.ROLE_NO=t1.OBJID
+		WHERE t2.USER_NO=#{userNo}
+	</select>
+	
+	<update id="updateUserPwdStatus" parameterType="java.util.HashMap">
+		update
+		sys_user_info
+		set
+		<if test="updateUserPwdStatusMap.userStatus!=null and updateUserPwdStatusMap.userStatus != ''">
+			stat=#{updateUserPwdStatusMap.userStatus},
+		</if>
+		USER_NO=#{updateUserPwdStatusMap.userNo}
+		where
+		USER_NO=#{updateUserPwdStatusMap.userNo}
+	</update>
+	
+	<!--用户进本信息处理-->
+    <select id="getUserInfoList" resultType="com.siroinfo.ecms.model.SysUserInfoModel">
+        SELECT t1.user_no AS userNo, t1.org_id AS orgId,t1.name AS userName, t1.gender, t1.idtype, t1.idcard, t1.phone, t1.email, t1.stat
+		FROM sys_user_info t1
+        <where>
+            <if test="usermngMap.branchNo!=null and usermngMap.branchNo != ''">
+                and t1.org_id=#{usermngMap.branchNo}
+            </if>
+            <if test="usermngMap.userNo!=null and usermngMap.userNo != ''">
+                and t1.user_no=#{usermngMap.userNo}
+            </if>
+            <if test="usermngMap.userName!=null and usermngMap.userName != ''">
+                and t1.name like "%"#{usermngMap.userName}"%"
+            </if>
+            <if test="usermngMap.gender!=null and usermngMap.gender != ''">
+                and t1.gender=#{usermngMap.gender}
+            </if>
+            <if test="usermngMap.identType!=null and usermngMap.identType != ''">
+                and t1.idtype=#{usermngMap.identType}
+            </if>
+            <if test="usermngMap.identNo!=null and usermngMap.identNo != ''">
+                and t1.idcard=#{usermngMap.identNo}
+            </if>
+            <if test="usermngMap.tel!=null and usermngMap.tel != ''">
+                and t1.phone=#{usermngMap.tel}
+            </if>
+            <if test="usermngMap.email!=null and usermngMap.email != ''">
+                and t1.email=#{usermngMap.email}
+            </if>
+        </where>
+    </select>
+    
+    <update id="updateUserBaseInfo" parameterType="java.util.HashMap">
+        update
+        sys_user_info
+        set
+        <if test="usermngMap.userName!=null and usermngMap.userName != ''">
+            username=#{usermngMap.userName},
+        </if>
+        <if test="usermngMap.gender!=null and usermngMap.gender != ''">
+            gender=#{usermngMap.gender},
+        </if>
+        <if test="usermngMap.identType!=null and usermngMap.identType != ''">
+            identType=#{usermngMap.identType},
+        </if>
+        <if test="usermngMap.identNo!=null and usermngMap.identNo != ''">
+            identNo=#{usermngMap.identNo},
+        </if>
+        <if test="usermngMap.tel!=null and usermngMap.tel != ''">
+            tel=#{usermngMap.tel},
+        </if>
+        <if test="usermngMap.email!=null and usermngMap.email != ''">
+            email=#{usermngMap.email},
+        </if>
+        <if test="usermngMap.userStatus!=null and usermngMap.userStatus != ''">
+            userStatus=#{usermngMap.userStatus},
+        </if>
+        <if test="usermngMap.loginType!=null and usermngMap.loginType != ''">
+            loginType=#{usermngMap.loginType},
+        </if>
+        userno=#{usermngMap.userNo}
+        where
+        userno=#{usermngMap.userNo}
+    </update>
+
+    <insert id="addUserBaseInfo" parameterType="java.util.HashMap">
+		insert into sys_user_info
+			(branchNo, userNo, userName, gender, identType, identNo, tel, email, userStatus, loginType)
+		values
+			(#{usermngMap.branchNo},#{usermngMap.userNo},#{usermngMap.userName},#{usermngMap.gender},#{usermngMap.identType},#{usermngMap.identNo},
+			#{usermngMap.tel},#{usermngMap.email},#{usermngMap.userStatus},#{usermngMap.loginType})
+	</insert>
+
+    <delete id="deleteUserBaseInfo" parameterType="String">
+		delete from sys_user_info where user_no = #{userNo}
+	</delete>
+</mapper>
