@@ -8,8 +8,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class SysOrgInfoModel {
     private String id;
-    private String orgname;  							// 机构名称
-    private String orgnum;   							// 机构号
+    private String orgname;  							//机构名称
+    private String orgnum;   							//机构号
     private String upid;								//上级id
     private String ordernum;							//排序字段 
     private String birthday;							//联系人

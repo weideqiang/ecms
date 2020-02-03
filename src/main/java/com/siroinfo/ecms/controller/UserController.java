@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiOperation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-//@CrossOrigin
+
 @RestController
 @Api(value = "用户管理")
 @RequestMapping(value = "/user")

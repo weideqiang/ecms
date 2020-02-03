@@ -1,0 +1,25 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.siroinfo.ecms.dao.ds1.SysOrgInfoDao">
+    <select id="getOrgInfoByNo" resultType="com.siroinfo.ecms.model.SysOrgInfoModel">
+		SELECT
+		t.id,          -- 机构编号
+		t.orgname,     -- 机构名称
+		t.orgnum,      -- 机构号
+		t.upid,        -- 上级id
+		t.linkman,     -- 联系人
+		t.phonenum,    -- 联系电话
+		t.orgadress,   -- 机构地址
+		t.upid,        -- 上级id
+		t.by2,         -- 机构级别
+		t.by3,         -- 机构类型
+		t.by4,         -- 地区代码
+		t.ssfh,        -- 所示分行
+		t.cityno,      -- 城市编号
+		t.districtno   -- 城区编号
+		FROM sys_org_info t
+		WHERE t.id = #{orgNo}
+	</select>
+</mapper>
